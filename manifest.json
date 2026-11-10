@@ -1,0 +1,35 @@
+{
+    "manifest_version": 2,
+    "name": "休息一下～25分钟 healthyBreak 提醒",
+    "version": "0.1.0",
+    "description": "每25分钟提醒你眺望远处、放松眼睛、伸懒腰、站起来活动、喝口水!take a healthy break every 25 minutes!",
+    "icons": {
+        "16": "./img/logo.png",
+        "48": "./img/logo.png",
+        "128": "./img/logo.png"
+    },
+    "permissions": [
+        "notifications",
+        "webRequestBlocking",
+        "storage"
+    ],
+    "background": {
+        "page": "./background.html"
+    },
+    "browser_action": {
+        "default_icon": "./img/logo.png",
+        "default_title": "healthyBreak!",
+        "default_popup": "./popup.html"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "js/content-script.js"
+            ],
+            "run_at": "document_start"
+        }
+    ]
+}
