@@ -3,8 +3,8 @@ var winWidth = 1440;
 var winHeight = 860;
 var light = true;
 var duckwidth = 15;
-//提醒周期，单位秒
-var cycleSeconds = 25 * 60;
+//提醒周期，单位秒，数值来自 js/config.js
+var cycleSeconds = Math.round(HB_CONFIG.intervalMinutes * 60);
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     winWidth = request.winWidth;
@@ -50,10 +50,10 @@ function timer() {
     if (count >= cycleSeconds) {
         //超时了，图标改成红色和sos文案！
         chrome.browserAction.setBadgeText({
-            text: 'sos'
+            text: HB_CONFIG.badge.overtimeText
         });
         chrome.browserAction.setBadgeBackgroundColor({
-            color: [255, 0, 0, 255]
+            color: HB_CONFIG.badge.overtimeColor
         });
     } else {
         //给浏览器右上角图标加上计时badge
@@ -61,7 +61,7 @@ function timer() {
             text: Math.floor(count / 60) + ''
         });
         chrome.browserAction.setBadgeBackgroundColor({
-            color: "#70d2c9"
+            color: HB_CONFIG.badge.runningColor
         });
     }
     return progress();
@@ -83,21 +83,21 @@ function notificationAction() {
         });
     chrome.notifications.create("1", {
         type: 'basic',
-        iconUrl: 'img/logo.png',
-        title: '小鸭子累死了！休息一下',
-        buttons: [{
-            title: "休息",
-            iconUrl: 'img/yellowsmile.png'
-        }, {
-            title: "等会儿",
-            iconUrl: 'img/redsmile.png'
-        }],
-        message: '25分钟啦！起身动一动：\n💧喝一口水  🙆伸个懒腰  🚶起身走走\n👀眺望远处  🔄转转眼球'
+        iconUrl: HB_CONFIG.toast.iconUrl,
+        title: HB_CONFIG.toast.title,
+        buttons: HB_CONFIG.buttons.map(function (b) {
+            return { title: b.title, iconUrl: b.iconUrl };
+        }),
+        message: HB_CONFIG.toast.message
     });
 }
 
 chrome.notifications.onButtonClicked.addListener(function (id, btnIndex) {
-    count = btnIndex ? count : 0;
+    var btn = HB_CONFIG.buttons[btnIndex];
+    // 配置里标了 resetTimer 的按钮才会重新开始计时
+    if (btn && btn.resetTimer) {
+        count = 0;
+    }
 });
 
 function getWandH() {

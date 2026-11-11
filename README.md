@@ -36,6 +36,7 @@ healthyBreak/
 ├── background.html        # 后台页面，只挂载 background.js
 ├── popup.html             # 弹出面板：太阳、小鸭子、进度条、刷新按钮
 ├── js/
+│   ├── config.js          # 配置入口：通知间隔、toast 文案、按钮行为、角标样式
 │   ├── background.js      # 核心：每秒计时、角标、通知、小鸭子体型状态
 │   ├── popup.js           # 面板渲染与交互，直接读写后台页的状态
 │   └── content-script.js  # 把屏幕分辨率发给后台，供弹窗自适应大小
@@ -43,9 +44,20 @@ healthyBreak/
 └── norm.png / sos.png / stop.png   # README 顶部三张预览截图
 ```
 
+## 自定义
+
+想改提醒间隔、通知文案、按钮文字，**只改 `js/config.js` 一个文件**就行：
+
+1. 用记事本打开 `js/config.js`
+2. 改 `intervalMinutes`（分钟数）、`toast.title`、`toast.message`、`buttons` 里的文字
+3. 到 `edge://extensions`（或 `chrome://extensions`）点这个插件卡片上的「刷新」按钮
+
+按钮的 `resetTimer` 字段决定点它是否重新开始计时：「休息」是 `true`，「等会儿」是 `false`。
+
 ## 实现说明
 
-- `js/background.js` 里一个 `setInterval(timer, 1000)` 就是全部的时间引擎：`count` 每秒自增，对 `cycleSeconds`（25×60）取模决定何时弹通知，超时则改角标颜色与文案。黑夜模式下 `count` 不增长，实现「时间停止」。
+- 所有可配置项集中在 `js/config.js`，`background.js` 只通过 `HB_CONFIG` 读值，不再硬编码。
+- `js/background.js` 里一个 `setInterval(timer, 1000)` 就是全部的时间引擎：`count` 每秒自增，对 `cycleSeconds`（来自 `HB_CONFIG.intervalMinutes * 60`）取模决定何时弹通知，超时则改角标颜色与文案。黑夜模式下 `count` 不增长，实现「时间停止」。
 - `timer()` 返回本周期完成百分比，`js/popup.js` 拿这个值同时驱动小鸭子的横向位置和水位进度条宽度。
 - 弹窗面板尺寸靠 `content-script.js` 上报的屏幕分辨率换算，因此需要网页上有 content script 注入过才能拿到准确数值。
 - 小鸭子的胖瘦只存在内存里（`duckwidth` 变量），浏览器重启就回到初始大小——没有用 `storage` 持久化。
