@@ -72,5 +72,3 @@ healthyBreak/
 灵感与最初的结构来自 [@sologgfun](https://github.com/sologgfun) 的 [drinkNow](https://github.com/sologgfun/drinkNow)——「年轻人的第一个 Chrome 插件」。这个项目在那份基础上改了提醒周期、通知文案、昼夜逻辑和小鸭子的成长规则。
 
 感谢小朋友🐏医生。
-
-关注身体健康，rua!!!
