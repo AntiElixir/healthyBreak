@@ -1,5 +1,7 @@
 # 休息一下～25分钟 healthyBreak 提醒
 
+(I do not use it anymore, and I recommend [stretchly](https://github.com/hovancik/stretchly), which I am using now.)(laugh)
+
 一个用来提醒自己喝水、起身活动的 Chrome 插件。每 25 分钟弹一次通知，顺便养一只会喝水长大、会累倒的小鸭子。
 
 | 正常计时中 | 超过 25 分钟没处理 | 点击太阳暂停时间 |
